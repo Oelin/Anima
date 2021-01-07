@@ -1,6 +1,6 @@
 # anima
 
-A little sripting language that's easy to to read, write and learn. 
+A little scripting language that's easy to to read, write and learn. 
 
 ```ruby
 def count(to)
