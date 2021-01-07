@@ -1,7 +1,7 @@
 {
   "name": "anima",
   "version": "0.1.1",
-  "description": "little scripting language",
+  "description": "a little scripting language",
   "main": "src/index.js",
   "repository": {
     "type": "git",
