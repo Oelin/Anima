@@ -1,6 +1,6 @@
 # anima
 
-Anima is a little sripting language that's easy to to read, write and learn. 
+A little sripting language that's easy to to read, write and learn. 
 
 ```ruby
 def count(to)
