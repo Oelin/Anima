@@ -1,4 +1,4 @@
-# anima
+# errin
 
 A little scripting language that's easy to to read, write and learn. 
 
