@@ -1,0 +1,22 @@
+{
+  "name": "anima",
+  "version": "0.1.1",
+  "description": "a little scripting language",
+  "main": "src/anima.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oelin/anima.git"
+  },
+  "keywords": [
+    "anima",
+    "scripting",
+    "programming",
+    "language"
+  ],
+  "author": "Oelin",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Oelin/anima/issues"
+  },
+  "homepage": "https://github.com/Oelin/anima#readme"
+}
