@@ -45,6 +45,10 @@ function call(func) {
   }
 }
 
+function primary() {
+  return skip(atom) || skip(brace) || unary()
+}
+
 
 function action() {
   return {
@@ -54,30 +58,11 @@ function action() {
 }
 
 
-function primary() {
-  return skip(atom) || skip(brace) || unary()
-}
-
-
 function brace() {
   let left = expr(punc('('))
   punc(')')
 
   return left
-}
-
-
-function atom() {
-  let type
-
-  let value = (type = 'name', skip(ident))
-    || (type = 'number', skip(number))
-    || (type = 'string', skip(string))
-    || (type = 'list', skip(list))
-    || (type = 'func', skip(func))
-    || (type = 'anon', anon())
-
-  return { type, value }
 }
 
 
@@ -95,6 +80,18 @@ function expr(min = 0) {
   }
 }
 
+/*
+function member(object) {
+  let prop = expr(punc('['))
+  punc(']')
+
+  return {
+    type: 'member',
+    prop,
+    object
+  }
+}
+
 
 function unary() {
   let op = operator()
@@ -105,6 +102,20 @@ function unary() {
     op,
     right
   }
+}
+
+
+function atom() {
+  let type
+
+  let value = (type = 'name', skip(ident))
+    || (type = 'number', skip(number))
+    || (type = 'string', skip(string))
+    || (type = 'list', skip(list))
+    || (type = 'func', skip(func))
+    || (type = 'anon', anon())
+
+  return { type, value }
 }
 
 
@@ -120,23 +131,12 @@ function binary(prec, left) {
 }
 
 
-function member(object) {
-  let prop = expr(punc('['))
-  punc(']')
-
-  return {
-    type: 'member',
-    prop,
-    object
-  }
-}
-
 
 // helpers
 
 function associate(op, prec) {
   return expr(prec + !(sticky.indexOf(op) + 1))
-}
+}*/
 
 
 function pad(parser) {
