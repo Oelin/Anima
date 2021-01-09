@@ -48,16 +48,48 @@ function call(func) {
 
 function action() {
   return {
-    type: skip(keyword, 'break') || keyword('continue')
+    type: skip(keyword, 'return') || skip(keyword, 'break') || keyword('continue'),
+    right: skip(expr)
   }
 }
 
 
-function ret() {
+function brace() {
+  let left = expr(punc('('))
+  punc(')')
+
+  return left
+}
+
+
+function unary() {
+  let op = operator()
+  let right = expr(prefix[op] || fail())
+
   return {
-    type: keyword('return'),
-    right: expr()
+    type: 'unary',
+    op,
+    right
   }
+}
+
+
+function atom() {
+  let type
+
+  let value = (type = 'name', skip(ident))
+    || (type = 'number', skip(number))
+    || (type = 'string', skip(string))
+    || (type = 'list', skip(list))
+    || (type = 'func', skip(func))
+    || (type = 'anon', anon())
+
+  return { type, value }
+}
+
+
+function primary() {
+  return skip(atom) || skip(brace) || unary()
 }
 
 
@@ -72,6 +104,8 @@ function member(object) {
   }
 }
 
+
+// helpers
 
 function pad(parser) {
   skip(space)
