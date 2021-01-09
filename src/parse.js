@@ -54,6 +54,11 @@ function action() {
 }
 
 
+function primary() {
+  return skip(atom) || skip(brace) || unary()
+}
+
+
 function brace() {
   let left = expr(punc('('))
   punc(')')
@@ -85,11 +90,6 @@ function atom() {
     || (type = 'anon', anon())
 
   return { type, value }
-}
-
-
-function primary() {
-  return skip(atom) || skip(brace) || unary()
 }
 
 
