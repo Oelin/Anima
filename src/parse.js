@@ -2,21 +2,25 @@ let lex = require('./lex')
 lex(global)
 
 
-function peek(...a) {
-  let s = here()
-  let node = skip(...a)
-  use(s)
+function name() {
+  return pad(ident)
+}
+
+
+function list() {
+  return some('[', expression, ',', ']')
+}
+
+
+function pad(parser) {
+  skip(space)
+  let node = parser()
+  skip(space)
 
   return node
 }
 
 
-function skip(parser, ...a) {
-  let s = here()
-
-  try {
-    return parser(...a)
-  } catch {
-    use(s)
-  }
+module.exports = function(text) {
+  return code(use(text))
 }
