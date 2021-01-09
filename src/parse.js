@@ -79,6 +79,18 @@ function unary() {
 }
 
 
+function member(object) {
+  let prop = expr(punc('['))
+  punc(']')
+
+  return {
+    type: 'member',
+    prop,
+    object
+  }
+}
+
+
 function atom() {
   let type
 
@@ -93,14 +105,34 @@ function atom() {
 }
 
 
-function member(object) {
-  let prop = expr(punc('['))
-  punc(']')
+function associate(op, prec) {
+  return expr(prec + !(sticky.indexOf(op) + 1))
+}
+
+
+function expr(min = 0) {
+  let left = pad(primary)
+
+  while (true) {
+    let op = peek(operator)
+    let prec = infix[op]
+
+    if (!op || prec < min)
+      return left
+
+    left = skip(member, left) || skip(call, left) || binary(prec, left)
+  }
+}
+
+
+function binary(prec, left) {
+  let op = operator()
+  let left = associate(op, prec)
 
   return {
-    type: 'member',
-    prop,
-    object
+    type: 'binary',
+    op,
+    left
   }
 }
 
