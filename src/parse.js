@@ -45,6 +45,7 @@ function call(func) {
   }
 }
 
+
 function primary() {
   return skip(atom) || skip(brace) || unary()
 }
@@ -54,6 +55,15 @@ function action() {
   return {
     type: skip(keyword, 'return') || skip(keyword, 'break') || keyword('continue'),
     right: skip(expr)
+  }
+}
+
+
+function _while() {
+  return {
+    type: keyword('while'),
+    cond: expr(),
+    body: code()
   }
 }
 
@@ -79,6 +89,8 @@ function expr(min = 0) {
     left = skip(member, left) || skip(call, left) || binary(prec, left)
   }
 }
+
+
 
 /*
 function member(object) {
