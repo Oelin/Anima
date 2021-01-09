@@ -8,7 +8,40 @@ function name() {
 
 
 function list() {
-  return some('[', expression, ',', ']')
+  return some('[', expr, ',', ']')
+}
+
+
+function params() {
+  return some('(', name, ',', ')')
+}
+
+
+function anon() {
+  return {
+    params: params(),
+    body: skip(punc, '->') ? expr() : code()
+  }
+}
+
+
+function func() {
+  keyword('def')
+  space()
+
+  return {
+    name: name(),
+    params: params(),
+    body: code()
+  }
+}
+
+
+function call(func) {
+  return {
+    type: 'call',
+    args: some('(', expr, ',', ')')
+  }
 }
 
 
