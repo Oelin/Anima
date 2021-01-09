@@ -40,7 +40,35 @@ function func() {
 function call(func) {
   return {
     type: 'call',
-    args: some('(', expr, ',', ')')
+    args: some('(', expr, ',', ')'),
+    func
+  }
+}
+
+
+function action() {
+  return {
+    type: skip(keyword, 'break') || keyword('continue')
+  }
+}
+
+
+function ret() {
+  return {
+    type: keyword('return'),
+    right: expr()
+  }
+}
+
+
+function member(object) {
+  let prop = expr(punc('['))
+  punc(']')
+
+  return {
+    type: 'member',
+    prop,
+    object
   }
 }
 
