@@ -67,30 +67,6 @@ function brace() {
 }
 
 
-function unary() {
-  let op = operator()
-  let right = expr(prefix[op] || fail())
-
-  return {
-    type: 'unary',
-    op,
-    right
-  }
-}
-
-
-function member(object) {
-  let prop = expr(punc('['))
-  punc(']')
-
-  return {
-    type: 'member',
-    prop,
-    object
-  }
-}
-
-
 function atom() {
   let type
 
@@ -102,11 +78,6 @@ function atom() {
     || (type = 'anon', anon())
 
   return { type, value }
-}
-
-
-function associate(op, prec) {
-  return expr(prec + !(sticky.indexOf(op) + 1))
 }
 
 
@@ -125,6 +96,18 @@ function expr(min = 0) {
 }
 
 
+function unary() {
+  let op = operator()
+  let right = expr(prefix[op] || fail())
+
+  return {
+    type: 'unary',
+    op,
+    right
+  }
+}
+
+
 function binary(prec, left) {
   let op = operator()
   let left = associate(op, prec)
@@ -137,7 +120,24 @@ function binary(prec, left) {
 }
 
 
+function member(object) {
+  let prop = expr(punc('['))
+  punc(']')
+
+  return {
+    type: 'member',
+    prop,
+    object
+  }
+}
+
+
 // helpers
+
+function associate(op, prec) {
+  return expr(prec + !(sticky.indexOf(op) + 1))
+}
+
 
 function pad(parser) {
   skip(space)
