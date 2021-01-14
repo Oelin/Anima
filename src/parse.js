@@ -1,6 +1,102 @@
-let lex = require('./lex')
-lex(global)
+let code = ''
 
+
+function use(s) {
+  code = s
+}
+
+
+function here() {
+  return code
+}
+
+
+function cut(m) {
+  let v = m[m.length - 1]
+  code = code.slice(v.length)
+  
+  return v
+}
+
+
+function itch(token) {
+  let m
+
+  if ((m = code.match(token)) && !m.index)
+    return cut(m)
+  
+  fail()
+}
+
+
+// token types
+
+function string() {
+  return itch(/^'[^']*'/)
+}
+
+
+function number() {
+  return itch(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+}
+
+
+function punc() {
+  return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
+}
+
+
+function operator() {
+  return itch(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
+}
+
+
+function keyword() {
+  return itch(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
+}
+
+
+function ident() {
+  return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
+}
+
+
+function space() {
+  return itch(/^\s+/)
+}
+
+
+function end() {
+  return itch(/^$/)
+}
+
+
+function fail() {
+  throw 'syntax error'
+}
+
+
+function keep(p, ...a) {
+  let s = here()
+  
+  try { 
+    return p(...a) 
+  } catch { 
+    use(s) 
+  }
+}
+
+
+function peek(...a) {
+  let s = here()
+  let node = keep(...a)
+  use(s)
+  
+  return node
+}
+
+
+// parsers
 
 function name() {
   return pad(ident)
@@ -8,158 +104,38 @@ function name() {
 
 
 function list() {
-  return some('[', expr, ',', ']')
+  return some(/\[/, name, ',', /\]/)
 }
-
-
-function params() {
-  return some('(', name, ',', ')')
-}
-
-
-function anon() {
-  return {
-    params: params(),
-    body: skip(punc, '->') ? expr() : code()
-  }
-}
-
-
-function func() {
-  keyword('def')
-  space()
-
-  return {
-    name: name(),
-    params: params(),
-    body: code()
-  }
-}
-
-
-function call(func) {
-  return {
-    type: 'call',
-    args: some('(', expr, ',', ')'),
-    func
-  }
-}
-
-
-function primary() {
-  return skip(atom) || skip(brace) || unary()
-}
-
-
-function action() {
-  return {
-    type: skip(keyword, 'return') || skip(keyword, 'break') || keyword('continue'),
-    right: skip(expr)
-  }
-}
-
-
-function _while() {
-  return {
-    type: keyword('while'),
-    cond: expr(),
-    body: code()
-  }
-}
-
-
-function brace() {
-  let left = expr(punc('('))
-  punc(')')
-
-  return left
-}
-
-
-function expr(min = 0) {
-  let left = pad(primary)
-
-  while (true) {
-    let op = peek(operator)
-    let prec = infix[op]
-
-    if (!op || prec < min)
-      return left
-
-    left = skip(member, left) || skip(call, left) || binary(prec, left)
-  }
-}
-
-
-
-/*
-function member(object) {
-  let prop = expr(punc('['))
-  punc(']')
-
-  return {
-    type: 'member',
-    prop,
-    object
-  }
-}
-
-
-function unary() {
-  let op = operator()
-  let right = expr(prefix[op] || fail())
-
-  return {
-    type: 'unary',
-    op,
-    right
-  }
-}
-
-
-function atom() {
-  let type
-
-  let value = (type = 'name', skip(ident))
-    || (type = 'number', skip(number))
-    || (type = 'string', skip(string))
-    || (type = 'list', skip(list))
-    || (type = 'func', skip(func))
-    || (type = 'anon', anon())
-
-  return { type, value }
-}
-
-
-function binary(prec, left) {
-  let op = operator()
-  let left = associate(op, prec)
-
-  return {
-    type: 'binary',
-    op,
-    left
-  }
-}
-
 
 
 // helpers
 
-function associate(op, prec) {
-  return expr(prec + !(sticky.indexOf(op) + 1))
-}*/
-
-
 function pad(parser) {
-  skip(space)
+  keep(space)
   let node = parser()
-  skip(space)
+  keep(space)
 
   return node
 }
 
 
-module.exports = function(text) {
-  return code(use(text))
+function some(a, term, sep, z) {
+  let node = []
+  itch(a)
+
+  while (!keep(itch, z)) {
+    node.push(term())
+    keep(itch, sep)
+  }
+
+  return node
 }
+
+
+// interface
+
+//module.exports = function(s) {
+//  return parse(use(s))
+//}
+
+module.exports = {some, itch, here, ident, peek, keep, name, list, use}
