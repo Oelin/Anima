@@ -2,7 +2,7 @@ let code
 
 
 function use(s) {
-	code = s
+  code = s
 }
 
 
