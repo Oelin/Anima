@@ -1,4 +1,4 @@
-let code
+let code = ''
 
 
 function use(s) {
@@ -13,7 +13,7 @@ function here() {
 
 function move(m) {
   let v = m[m.length - 1]
-  code = text.slice(v.length)
+  code = code.slice(v.length)
   
   return v
 }
