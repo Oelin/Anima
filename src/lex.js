@@ -12,7 +12,7 @@ function here() {
 
 
 function move(m) {
-  let v = m[m.length - 1]
+  let v = m[[...m].length - 1]
   code = code.slice(v.length)
   
   return v
