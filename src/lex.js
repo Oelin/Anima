@@ -1,1 +1,93 @@
-s='',n=r=>i=>(m=s.match(r),v=!m||m[2]||m[1]||m[0],(!m||i&&i!=v)?e():(s=s.slice(v.length),v)),h=()=>s,u=c=>s=c,e=()=>{throw'syntax error'};p=(...a)=>(c=h(),o=l(...a),u(c),o),l=(f,...a)=>{y=h();try{return f(...a)}catch{u(y)}},b=n(/^[\(\)\[\]\,]|^\s*(\->)/),t=(q,f,r,d)=>{j=[];b(q);while(!l(b,d)){j.push(f());l(b,r)};return j};module.exports=w=>Object.assign(w,{string:n(/^'[^']*'/),number:n(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/),punc:b,operator:n(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/),keyword:n(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/),ident:n(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))[a-zA-Z_][\w_]*/),space:n(/^\s+/),end:n(/^$/),sticky:['=','+=','*=','/=','^=','&=','|=','<<=','>>=','*=','**'],infix:{'=':1,'+=':1,'*=':1,'/=':1,'^=':1,'&=':1,'|=':1,'<<=':1,'>>=':1,'**=':1,'or':2,'and':3,'|':4,'^':5,'&':6,'==':7,'!=':7,'<':8,'>':8,'<=':8,'>=':8,'<<':9,'>>':9,'+':10,'-':10,'/':11,'*':11,'**':12,'(':14,'[':14,'.':14},prefix:{'-':13,'+':13,'~':13,'not':13},fail:e,peek:p,skip:l,some:t,use:u})
+let code
+
+
+function use(s) {
+	code = s
+}
+
+
+function here() {
+	return code
+}
+
+
+function move(m) {
+	let v = m[m.length - 1]
+	code = text.slice(v.length)
+
+	return v
+}
+
+
+function itch(token) {
+	let m 
+
+	if (m = code.match(token)) {
+		return move(m)
+	}
+
+	else fail()
+}
+
+
+// token types
+
+function string() {
+	return itch(/^'[^']*'/)
+}
+
+
+function number() {
+	return itch(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+}
+
+
+function punc() {
+	return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
+}
+
+
+function operator() {
+	return itch(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
+}
+
+
+function keyword() {
+	return itch(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
+}
+
+
+function ident() {
+	return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))[a-zA-Z_][\w_]*/)
+}
+
+
+function space() {
+	return itch(/^\s+/)
+}
+
+
+function end() {
+	return itch(/^$/)
+}
+
+
+function fail() {
+	throw 'syntax error'
+}
+
+
+module.exports = {
+	use,
+	peek,
+	skip,
+	string,
+	number,
+	punc,
+	operator,
+	keyword,
+	ident,
+	space,
+	end,
+	fail
+}
