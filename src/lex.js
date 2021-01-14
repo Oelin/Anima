@@ -1,4 +1,4 @@
-let code = ''
+let code
 
 
 function use(s) {
@@ -29,7 +29,7 @@ function itch(token) {
 }
 
 
-// token types
+// tokens
 
 function string() {
   return itch(/^'[^']*'/)
