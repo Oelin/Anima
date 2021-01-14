@@ -57,7 +57,7 @@ function keyword() {
 
 
 function ident() {
-  return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))[a-zA-Z_][\w_]*/)
+  return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
 }
 
 
