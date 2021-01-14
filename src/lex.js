@@ -76,10 +76,32 @@ function fail() {
 }
 
 
+function keep(p, ...a) {
+  let s = here()
+  
+  try { 
+    return p(...a) 
+  } catch { 
+    use(s) 
+  }
+}
+
+
+function peek(...a) {
+  let s = here()
+  let node = keep(...a)
+  use(s)
+  
+  return node
+}
+
+
 module.exports = {
   use,
+  itch,
+  keep,
   peek,
-  skip,
+  fail,
   string,
   number,
   punc,
@@ -88,5 +110,4 @@ module.exports = {
   ident,
   space,
   end,
-  fail
 }
