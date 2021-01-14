@@ -104,28 +104,32 @@ function name() {
 
 
 function list() {
-  return some(/\[/, name, ',', /\]/)
+  return some(name, /\[/, ',', /\]/)
+}
+
+
+function parse() {
+  return list()
 }
 
 
 // helpers
 
 function pad(parser) {
-  keep(space)
-  let node = parser()
+  let node = parser(keep(space))
   keep(space)
 
   return node
 }
 
 
-function some(a, term, sep, z) {
+function some(parser, a, b, z) {
   let node = []
   itch(a)
 
-  while (!keep(itch, z)) {
-    node.push(term())
-    keep(itch, sep)
+  while (! keep(itch, z)) {
+    node.push(parser())
+    keep(itch, b)
   }
 
   return node
@@ -134,8 +138,11 @@ function some(a, term, sep, z) {
 
 // interface
 
-//module.exports = function(s) {
-//  return parse(use(s))
-//}
+module.exports = function(s) {
+  return parse(use(s))
+}
 
-module.exports = {some, itch, here, ident, peek, keep, name, list, use}
+
+// notes:
+// to increase parsing speed, prefix regexes with `^`, forcing 
+// itch() to search from the begining of the string.
