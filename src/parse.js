@@ -37,6 +37,20 @@ function func() {
 }
 
 
+function atom() {
+  let type
+
+  let value = (type = 'name', skip(ident))
+    || (type = 'number', skip(number))
+    || (type = 'string', skip(string))
+    || (type = 'list', skip(list))
+    || (type = 'func', skip(func))
+    || (type = 'anon', anon())
+
+  return { type, value }
+}
+
+
 function call(func) {
   return {
     type: 'call',
@@ -53,8 +67,7 @@ function primary() {
 
 function action() {
   return {
-    type: skip(keyword, 'return') || skip(keyword, 'break') || keyword('continue'),
-    right: skip(expr)
+    type: skip(keyword, 'break') || keyword('continue')
   }
 }
 
@@ -65,6 +78,32 @@ function _while() {
     cond: expr(),
     body: code()
   }
+}
+
+
+function _for() {
+  return {
+    type: keyword('for'),
+    vars: skip(name) || pad(params),
+    list: expr(keyword('in')),
+    body: code()
+  }
+}
+
+
+function statement() {
+  return skip(_while) || skip(_for) || skip(action) || expr()
+}
+
+
+function code() {
+  let node = []
+
+  while (peek(end) != '' && !skip(keyword, 'end')) {
+    node.push(pad(statement))
+  }
+
+  return node
 }
 
 
@@ -91,8 +130,6 @@ function expr(min = 0) {
 }
 
 
-
-/*
 function member(object) {
   let prop = expr(punc('['))
   punc(']')
@@ -117,38 +154,22 @@ function unary() {
 }
 
 
-function atom() {
-  let type
-
-  let value = (type = 'name', skip(ident))
-    || (type = 'number', skip(number))
-    || (type = 'string', skip(string))
-    || (type = 'list', skip(list))
-    || (type = 'func', skip(func))
-    || (type = 'anon', anon())
-
-  return { type, value }
+function sticks(op) {
+  return !(sticky.indexOf(op) + 1)
 }
 
 
 function binary(prec, left) {
   let op = operator()
-  let left = associate(op, prec)
+  let right = expr(prec + sticks(op))
 
   return {
     type: 'binary',
     op,
-    left
+    left,
+    right
   }
 }
-
-
-
-// helpers
-
-function associate(op, prec) {
-  return expr(prec + !(sticky.indexOf(op) + 1))
-}*/
 
 
 function pad(parser) {
@@ -160,6 +181,26 @@ function pad(parser) {
 }
 
 
+
+//module.exports = {use, some, params, skip, peek, here}
 module.exports = function(text) {
   return code(use(text))
 }
+
+
+// bugs:
+
+// parser completeness
+// status: FIXED
+// info: ([1,2,3]) causes a syntax error
+// info: lists inside of braces causes a syntax error
+// info: was caused by anon() it atom()
+// info: caused by params() in anon()
+// info: caused by some() in params()
+// info: caused by scoping error in skip()
+
+// parser leniance
+// status: CAUSE FOUND
+// info: '()' is parsed as an anon because code() can be the empty string.
+// proposal: we need a distinction between top-level code and blocks which
+// end with the `end` keyword. Blocks cannot be the empty string.
