@@ -1,3 +1,6 @@
+let lex = require('./lex')
+
+
 function name() {
   return pad(ident)
 }
@@ -34,6 +37,9 @@ function some(parser, a, b, z) {
 
   return node
 }
+
+
+Object.assign(global, lex)
 
 
 module.exports = function(code) {
