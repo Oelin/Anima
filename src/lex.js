@@ -109,5 +109,5 @@ module.exports = {
   keyword,
   ident,
   space,
-  end,
+  end
 }
