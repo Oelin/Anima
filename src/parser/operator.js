@@ -1,5 +1,5 @@
 module.exports = {
-  infix: {
+  binary: {
     '=': 1,
     '+=': 1,
     '*=': 1,
@@ -32,10 +32,13 @@ module.exports = {
     '[': 14,
     '.': 14
   },
-  prefix: {
+  unary: {
     '-': 13,
     '+': 13,
     '~': 13,
     'not': 13
+  },
+  tight: {
+    
   }
 }
