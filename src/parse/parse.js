@@ -17,6 +17,25 @@ function params() {
 }
 
 
+function anon() {
+  return {
+    params: params(),
+    body: skip(punc, arrow) ? expr() : code()
+  }
+}
+
+
+function func() {
+  itch(/^def/)
+  space()
+
+  return {
+    name: name(),
+    params: params(),
+    body: code()
+  }
+}
+
 
 
 
