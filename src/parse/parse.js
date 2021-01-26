@@ -26,11 +26,8 @@ function anon() {
 
 
 function func() {
-  itch(/^def/)
-  space()
-
   return {
-    name: name(),
+    name: name(space(itch(/^def/))),
     params: params(),
     body: code()
   }
