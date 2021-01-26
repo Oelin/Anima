@@ -11,14 +11,6 @@ function here() {
 }
 
 
-function move(m) {
-  let v = m[m.length - 1])
-  text = text.slice(v.length))
-  
-  return v
-}
-
-
 function itch(token) {
   let m 
   
@@ -73,6 +65,11 @@ function ident() {
 }
 
 
+function move(m) {
+  return use(text.slice((v=m[m.length-1]).length)), v
+}
+
+
 function space() {
   return itch(/^\s+/)
 }
@@ -84,7 +81,7 @@ function end() {
 
 
 function fail() {
-  throw	 'syntax error'
+  throw	'syntax error'
 }
 
 
@@ -105,8 +102,8 @@ function keep(p, ...a) {
   try { 
     return p(...a) 
   } catch { 
-    use(s) 
-  ]
+    use(s)
+  }
 }
 
 
