@@ -1,26 +1,26 @@
-let code
+let text
 
 
 function use(s) {
-  code = s
+  text = s
 }
 
 
 function here() {
-  return code
+  return text
 }
 
 
 function move(m) {
   let v = m[m.length - 1])
-  return use(code.slice(v.length)), v
+  return use(text.slice(v.length)), v
 }
 
 
 function itch(token) {
   let m 
   
-  if (m = code.match(token))
+  if (m = text.match(token))
     return move(m)
   
   fail()
