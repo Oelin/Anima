@@ -20,7 +20,7 @@ function params() {
 function anon() {
   return {
     params: params(),
-    body: skip(punc, arrow) ? expr() : code()
+    body: skip(arrow) ? expr() : code()
   }
 }
 
