@@ -2,19 +2,64 @@ imports('./lex')
 imports('./operator')
 
 
-function list() {
-  return some(expr, /^[/, ',', /^]/)
+function name() {
+  return pad(ident)
 }
 
 
-function 
+function list() {
+  return some(osq, expr, comma, csq)
+}
+
+
+function params() {
+  return some(obr, name, comma, cbr)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // helpers
-
-function imports(path) {
-  Object.assign(global, require(path))
-}
 
 function pad(parser) {
   skip(space)
@@ -23,4 +68,22 @@ function pad(parser) {
 
   return node
 }
-// todo...
+
+
+function some(a, p, q, z) {
+  let node = []
+  a()
+
+  while (!skip(z))
+    skip(q, node.push(p()))
+
+  return node
+}
+
+
+function imports(path) {
+  Object.assign(global, require(path))
+}
+
+
+module.exports = parse

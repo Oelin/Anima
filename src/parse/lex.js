@@ -13,8 +13,8 @@ function here() {
 
 // token types
 
-let osq = () => itch(/^[/)
-let csq = () => itch(/^]/)
+let osq = () => itch(/^\[/)
+let csq = () => itch(/^\]/)
 let obr = () => itch(/^\(/)
 let cbr = () => itch(/^\)/)
 let comma = () => itch(/^,/)
@@ -101,7 +101,7 @@ function peek(...a) {
 }
 
 
-function keep(p, ...a) {
+function skip(p, ...a) {
   let s = here()
   
   try { 
@@ -115,7 +115,7 @@ function keep(p, ...a) {
 module.exports = {
   use,
   itch,
-  keep,
+  skip,
   peek,
   fail,
   string,
