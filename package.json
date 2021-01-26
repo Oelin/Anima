@@ -2,7 +2,7 @@
   "name": "anima",
   "version": "0.1.1",
   "description": "a little scripting language",
-  "main": "src/anima.js",
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Oelin/anima.git"
