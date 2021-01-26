@@ -12,10 +12,8 @@ function here() {
 
 
 function move(m) {
-  let v = m[m.length - 1]
-  code = code.slice(v.length)
-  
-  return v
+  let v = m[m.length - 1])
+  return use(code.slice(v.length)), v
 }
 
 
