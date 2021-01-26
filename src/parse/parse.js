@@ -2,14 +2,12 @@ imports('./lex')
 imports('./operator')
 
 
-function name() {
-  return pad(ident)
-}
-
-
 function list() {
   return some(expr, /^[/, ',', /^]/)
 }
+
+
+function 
 
 
 // helpers

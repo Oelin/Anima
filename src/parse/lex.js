@@ -1,5 +1,12 @@
 let code
+let osq = () => itch(/^[/)
+let csq = () => itch(/^]/)
+let obr = () => itch(/^\(/)
+let cbr = () => itch(/^\)/)
+let comma = () => itch(/^,/)
 
+
+// lexer
 
 function use(s) {
   code = s
@@ -27,7 +34,7 @@ function itch(token) {
 }
 
 
-// tokens
+// token types
 
 function string() {
   return itch(/^'[^']*'/)
@@ -41,6 +48,11 @@ function number() {
 
 function punc() {
   return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
+}
+
+
+function arrow() {
+  return itch(/^->/)
 }
 
 
@@ -70,7 +82,18 @@ function end() {
 
 
 function fail() {
-  throw 'syntax error'
+  throw	 'syntax error'
+}
+
+
+// lookahead
+
+function peek(...a) {
+  let s = here()
+  let node = keep(...a)
+  use(s)
+
+  return node
 }
 
 
@@ -81,16 +104,7 @@ function keep(p, ...a) {
     return p(...a) 
   } catch { 
     use(s) 
-  }
-}
-
-
-function peek(...a) {
-  let s = here()
-  let node = keep(...a)
-  use(s)
-  
-  return node
+  ]
 }
 
 
@@ -107,5 +121,11 @@ module.exports = {
   keyword,
   ident,
   space,
-  end
+  end,
+  osq,
+  csq,
+  obr,
+  cbr,
+  comma,
+  arrow
 }
