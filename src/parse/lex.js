@@ -13,7 +13,9 @@ function here() {
 
 function move(m) {
   let v = m[m.length - 1])
-  return use(text.slice(v.length)), v
+  text = text.slice(v.length))
+  
+  return v
 }
 
 
