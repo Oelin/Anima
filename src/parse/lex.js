@@ -1,9 +1,4 @@
-let code
-let osq = () => itch(/^[/)
-let csq = () => itch(/^]/)
-let obr = () => itch(/^\(/)
-let cbr = () => itch(/^\)/)
-let comma = () => itch(/^,/)
+let code = ''
 
 
 // lexer
@@ -35,6 +30,13 @@ function itch(token) {
 
 
 // token types
+
+let osq = () => itch(/^[/)
+let csq = () => itch(/^]/)
+let obr = () => itch(/^\(/)
+let cbr = () => itch(/^\)/)
+let comma = () => itch(/^,/)
+
 
 function string() {
   return itch(/^'[^']*'/)
