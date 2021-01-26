@@ -11,16 +11,6 @@ function here() {
 }
 
 
-function itch(token) {
-  let m 
-  
-  if (m = text.match(token))
-    return move(m)
-  
-  fail()
-}
-
-
 // token types
 
 let osq = () => itch(/^[/)
@@ -65,11 +55,6 @@ function ident() {
 }
 
 
-function move(m) {
-  return use(text.slice((v=m[m.length-1]).length)), v
-}
-
-
 function space() {
   return itch(/^\s+/)
 }
@@ -85,7 +70,27 @@ function fail() {
 }
 
 
-// lookahead
+// scanner
+
+function itch(token) {
+  let m 
+  
+  if (m = text.match(token))
+    return move(m)
+  
+  fail()
+}
+
+
+function move(m) {
+  let v = m[m.length - 1]
+  use(text.slice(v.length))
+  
+  return v
+}
+
+
+// choice
 
 function peek(...a) {
   let s = here()
