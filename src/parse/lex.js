@@ -1,7 +1,5 @@
-let code = ''
+let code
 
-
-// lexer
 
 function use(s) {
   code = s
