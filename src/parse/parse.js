@@ -1,5 +1,55 @@
-imports('./lex')
-imports('./operator')
+let { peek, skip, use, here } = require('./lex')
+let { unary, binary, bind } = require('./operator')
+let osq = () => itch(/^\[/)
+let csq = () => itch(/^\]/)
+let obr = () => itch(/^\(/)
+let cbr = () => itch(/^\)/)
+let comma = () => itch(/^,/)
+
+
+function string() {
+  return itch(/^'[^']*'/)
+}
+
+
+function number() {
+  return itch(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+}
+
+
+function punc() {
+  return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
+}
+
+
+function arrow() {
+  return itch(/^->/)
+}
+
+
+function operator() {
+  return itch(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
+}
+
+
+function keyword() {
+  return itch(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
+}
+
+
+function ident() {
+  return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
+}
+
+
+function space() {
+  return itch(/^\s+/)
+}
+
+
+function end() {
+  return itch(/^$/)
+}
 
 
 function name() {
