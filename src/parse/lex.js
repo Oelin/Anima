@@ -1,18 +1,20 @@
 let code
+let use = s => code = s
+let here = () => code
 
 
-function use(s) {
-  code = s
+function move(m) {
+  let v = m[m.length - 1]
+  code = code.slice(v.length)
+  
+  return v
 }
 
 
-function here() {
-  return code
-}
+// consume a token
 
-
-function itch(token) {
-  let m 
+function need(token) {
+  let m
   
   if (m = code.match(token))
     return move(m)
@@ -21,15 +23,7 @@ function itch(token) {
 }
 
 
-function move(m) {
-  let v = m[m.length - 1]
-  use(code.slice(v.length))
-  
-  return v
-}
-
-
-// choice
+// prediction
 
 function peek(...a) {
   let s = here()
@@ -53,7 +47,7 @@ function skip(p, ...a) {
 
 module.exports = {
   use,
-  itch,
-  skip,
+  need,
   peek,
+  skip,
 }
