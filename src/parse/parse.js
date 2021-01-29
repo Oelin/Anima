@@ -29,16 +29,6 @@ function comma() {
 }
 
 
-function string() {
-  return need(/^'[^']*'/)
-}
-
-
-function number() {
-  return need(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
-}
-
-
 function operator() {
   return need(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
 }
@@ -54,25 +44,48 @@ function space() {
 }
 
 
-function name() {
-  return pad(ident)
-}
-
-
-function list() {
-  return some(osq, expr, comma, csq)
-}
-
-
 function params() {
   return some(obr, name, comma, cbr)
 }
 
 
-// expressions
+// literals
+
+function name() {
+  return {
+    type: 'name',
+    value: pad(ident)
+  }
+}
+
+
+function string() {
+  return {
+    type: 'string',
+    value: need(/^'[^']*'/)
+  }
+}
+
+
+function number() {
+  return {
+    type: 'number',
+    value: need(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+  }
+}
+
+
+function list() {
+  return {
+    type: 'list',
+    value: some(osq, expr, comma, csq)
+  }
+}
+
 
 function anon() {
   return {
+    type: 'anon',
     params: params(),
     body: skip(/^->/) ? expr() : block()
   }
@@ -84,6 +97,7 @@ function func() {
   space()
 
   return {
+    type: 'func',
     name: name(),
     params: params(),
     body: code()
@@ -92,17 +106,11 @@ function func() {
 
 
 function literal() {
-  let type
-  let value = (type='name', skip(ident))
-    || (type='number', skip(number))
-    || (type='string', skip(string))
-    || (type='list', skip(list))
-    || (type='func', skip(func))
-    || (type='anon', anon())
-
-  return { type, value }
+  return skip(ident) || skip(number) || skip(string) || skip(list) || skip(func) || anon()
 }
 
+
+// expressions
 
 function member(left) {
   let prop = expr(osq())
@@ -177,6 +185,8 @@ function binary(bind, left) {
   }
 }
 
+
+// statements
 
 function block() {
   // todo
