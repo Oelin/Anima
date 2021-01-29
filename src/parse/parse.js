@@ -1,69 +1,69 @@
-const { peek, skip, use, here } = require('./lex')
+const { use, need, peek, skip } = require('./lex')
 const { unary, binary, flip } = require('./operator')
 
 
 function osq() {
-  return itch(/^\[/)
+  return need(/^\[/)
 }
 
 
 function csq() {
-  return itch(/^\]/)
+  return need(/^\]/)
 }
 
 
 function obr() {
-  return itch(/^\(/)
+  return need(/^\(/)
 }
 
 
 function cbr() {
-  return itch(/^\)/)
+  return need(/^\)/)
 }
 
 
 function comma() {
-  return itch(/^,/)
+  return need(/^,/)
 }
 
 
 function string() {
-  return itch(/^'[^']*'/)
+  return need(/^'[^']*'/)
 }
 
 
 function number() {
-  return itch(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+  return need(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
 }
 
 
 function punc() {
-  return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
+  return need(/^[\(\)\[\]\,]|^\s*(\->)/)
 }
 
 
 function operator() {
-  return itch(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
+  return need(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
 }
 
 
 function keyword() {
-  return itch(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
+  return need(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
 }
 
 
 function ident() {
-  return itch(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
+  return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
 }
 
 
 function space() {
-  return itch(/^\s+/)
+  return need(/^\s+/)
 }
 
 
 function end() {
-  return itch(/^$/)
+  return need(/^$/)
 }
 
 
@@ -91,7 +91,7 @@ function anon() {
 
 
 function func() {
-  itch(/^def/)
+  need(/^def/)
   space()
   
   return {
