@@ -2,11 +2,29 @@ const { peek, skip, use, here } = require('./lex')
 const { unary, binary, bind } = require('./operator')
 
 
-const osq = () => itch(/^\[/)
-const csq = () => itch(/^\]/)
-const obr = () => itch(/^\(/)
-const cbr = () => itch(/^\)/)
-const comma = () => itch(/^,/)
+function osq() {
+  return itch(/^\[/)
+}
+
+
+function csq() {
+  return itch(/^\]/)
+}
+
+
+function obr() {
+  return itch(/^\(/)
+}
+
+
+function cbr() {
+  return itch(/^\)/)
+}
+
+
+function comma() {
+  return itch(/^,/)
+}
 
 
 function string() {
@@ -21,11 +39,6 @@ function number() {
 
 function punc() {
   return itch(/^[\(\)\[\]\,]|^\s*(\->)/)
-}
-
-
-function arrow() {
-  return itch(/^->/)
 }
 
 
@@ -72,7 +85,7 @@ function params() {
 function anon() {
   return {
     params: params(),
-    body: skip(arrow) ? expr() : code()
+    body: skip(/^->/) ? expr() : code()
   }
 }
 
