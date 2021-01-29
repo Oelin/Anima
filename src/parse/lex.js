@@ -1,4 +1,4 @@
-dfddffffunction use(s) {
+function use(s) {
   code = s
 }
 
@@ -9,7 +9,7 @@ function need(token) {
   if (m = code.match(token))
     return move(m)
   
-  throw;
+  throw ''
 }
 
 
@@ -33,6 +33,7 @@ function skip(p, ...a) {
     use(s)
   }
 }
+
 
 // advance
 
