@@ -38,16 +38,16 @@ function skip(p, ...a) {
 // advance
 
 function move(m) {
-  v = m[m.length - 1]
+  let v = m[m.length - 1]
   code = code.slice(v.length)
   
   return v
 }
 
 
-module.exports = {
-  use,
-  need,
-  peek,
-  skip,
+module.exports = { 
+  use, 
+  need, 
+  peek, 
+  skip 
 }
