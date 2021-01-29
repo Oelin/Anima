@@ -1,5 +1,5 @@
 const { peek, skip, use, here } = require('./lex')
-const { unary, binary, bind } = require('./operator')
+const { unary, binary, flip } = require('./operator')
 
 
 function osq() {
