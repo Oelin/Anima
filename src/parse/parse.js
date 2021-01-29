@@ -1,10 +1,12 @@
-let { peek, skip, use, here } = require('./lex')
-let { unary, binary, bind } = require('./operator')
-let osq = () => itch(/^\[/)
-let csq = () => itch(/^\]/)
-let obr = () => itch(/^\(/)
-let cbr = () => itch(/^\)/)
-let comma = () => itch(/^,/)
+const { peek, skip, use, here } = require('./lex')
+const { unary, binary, bind } = require('./operator')
+
+
+const osq = () => itch(/^\[/)
+const csq = () => itch(/^\]/)
+const obr = () => itch(/^\(/)
+const cbr = () => itch(/^\)/)
+const comma = () => itch(/^,/)
 
 
 function string() {
@@ -147,11 +149,6 @@ function some(a, p, q, z) {
     skip(q, node.push(p()))
 
   return node
-}
-
-
-function imports(path) {
-  Object.assign(global, require(path))
 }
 
 
