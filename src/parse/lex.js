@@ -1,32 +1,22 @@
-let code
-let use = s => code = s
-let here = () => code
-
-
-function move(m) {
-  let v = m[m.length - 1]
-  code = code.slice(v.length)
-  
-  return v
+dfddffffunction use(s) {
+  code = s
 }
 
 
-// consume a token
+// consume
 
 function need(token) {
-  let m
-  
   if (m = code.match(token))
     return move(m)
   
-  fail()
+  throw;
 }
 
 
-// prediction
+// predict
 
 function peek(...a) {
-  let s = here()
+  let s = code
   let node = keep(...a)
   use(s)
 
@@ -35,13 +25,22 @@ function peek(...a) {
 
 
 function skip(p, ...a) {
-  let s = here()
+  let s = code
   
   try { 
     return p(...a) 
   } catch { 
     use(s)
   }
+}
+
+// advance
+
+function move(m) {
+  v = m[m.length - 1]
+  code = code.slice(v.length)
+  
+  return v
 }
 
 
