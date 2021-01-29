@@ -1,6 +1,8 @@
-const { use, need, peek, skip } = require('./lex')
-const { unary, binary, flip } = require('./operator')
+let { use, need, peek, skip } = require('./lex')
+let { infix, prefix, flip } = require('./operator')
 
+
+// terminals
 
 function osq() {
   return need(/^\[/)
@@ -37,18 +39,8 @@ function number() {
 }
 
 
-function punc() {
-  return need(/^[\(\)\[\]\,]|^\s*(\->)/)
-}
-
-
 function operator() {
   return need(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
-}
-
-
-function keyword() {
-  return need(/^(if|elif|else|while|for|in|def|return|break|continue|end)(?:\W|$)/)
 }
 
 
@@ -59,11 +51,6 @@ function ident() {
 
 function space() {
   return need(/^\s+/)
-}
-
-
-function end() {
-  return need(/^$/)
 }
 
 
@@ -82,10 +69,12 @@ function params() {
 }
 
 
+// expressions
+
 function anon() {
   return {
     params: params(),
-    body: skip(/^->/) ? expr() : code()
+    body: skip(/^->/) ? expr() : block()
   }
 }
 
@@ -93,7 +82,7 @@ function anon() {
 function func() {
   need(/^def/)
   space()
-  
+
   return {
     name: name(),
     params: params(),
@@ -102,32 +91,96 @@ function func() {
 }
 
 
+function literal() {
+  let type
+  let value = (type='name', skip(ident))
+    || (type='number', skip(number))
+    || (type='string', skip(string))
+    || (type='list', skip(list))
+    || (type='func', skip(func))
+    || (type='anon', anon())
+
+  return { type, value }
+}
 
 
+function member(left) {
+  let prop = expr(osq())
+  csq()
+
+  return {
+    type: 'member',
+    prop,
+    left
+  }
+}
 
 
+function call(left) {
+  return {
+    type: 'call',
+    args: some(obr, expr, comma, cbr),
+    left
+  }
+}
 
 
+function group() {
+  let right = expr(obr())
+  cbr()
+
+  return right
+}
 
 
+function primary() {
+  return skip(literal) || skip(group) || unary()
+}
 
 
+function expr(min = 0) {
+  let left = pad(primary)
+
+  while (true) {
+    let op = peek(operator)
+    let bind = infix[op]
+
+    if (!op || bind < min)
+      return left
+
+    left = skip(member, left) || skip(call, left) || binary(bind, left)
+  }
+}
 
 
+function unary() {
+  let op = operator()
+  let right = expr(prefix[op] || fail())
+
+  return {
+    type: 'unary',
+    op,
+    right
+  }
+}
 
 
+function binary(bind, left) {
+  let op = operator()
+  let right = expr(bind + flips[op])
+
+  return {
+    type: 'binary',
+    op,
+    left,
+    right
+  }
+}
 
 
-
-
-
-
-
-
-
-
-
-
+function block() {
+  // todo
+}
 
 
 
@@ -144,6 +197,11 @@ function func() {
 
 
 // helpers
+
+function fail() {
+  throw 'syntax error'
+}
+
 
 function pad(parser) {
   skip(space)
@@ -165,4 +223,4 @@ function some(a, p, q, z) {
 }
 
 
-module.exports = parse
+module.exports = {use, literal, member, molecule, group, call, func, anon, list, params, binary, unary, expr}
