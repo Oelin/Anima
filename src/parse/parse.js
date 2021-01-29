@@ -2,7 +2,7 @@ let { use, need, peek, skip } = require('./lex')
 let { infix, prefix, flip } = require('./operator')
 
 
-// terminals
+// tokens
 
 function osq() {
   return need(/^\[/)
@@ -29,6 +29,11 @@ function comma() {
 }
 
 
+function arrow() {
+  return need(/^->/)
+}
+
+
 function operator() {
   return need(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
 }
@@ -41,6 +46,16 @@ function ident() {
 
 function space() {
   return need(/^\s+/)
+}
+
+
+function empty() {
+  return need(/^$/)
+}
+
+
+function end() {
+  return need(/^end/)
 }
 
 
@@ -87,7 +102,7 @@ function anon() {
   return {
     type: 'anon',
     params: params(),
-    body: skip(/^->/) ? expr() : block()
+    body: skip(arrow) ? expr() : block()
   }
 }
 
@@ -106,7 +121,7 @@ function func() {
 
 
 function literal() {
-  return skip(ident) || skip(number) || skip(string) || skip(list) || skip(func) || anon()
+  return skip(name) || skip(number) || skip(string) || skip(list) || skip(func) || anon()
 }
 
 
@@ -175,7 +190,7 @@ function unary() {
 
 function binary(bind, left) {
   let op = operator()
-  let right = expr(bind + flips[op])
+  let right = expr(bind + flip[op])
 
   return {
     type: 'binary',
@@ -188,22 +203,45 @@ function binary(bind, left) {
 
 // statements
 
-function block() {
-  // todo
+function action() {
+  return {
+    type: skip(/^break/) || need(/^continue/)
+  }
 }
 
 
+function _while() {
+  return {
+    type: need(/^while/),
+    cond: expr(),
+    body: block()
+  }
+}
 
 
+function each() {
+  return {
+    type: need(/^for/),
+    left: pad(params),
+    right: expr(need(/^in/)),
+    body: block()
+  }
+}
 
 
+function line() {
+  return skip(expr) || skip(_while) || skip(each) || action()
+}
 
 
+function block(e=end) {
+  let node = []
 
+  while (! skip(e))
+    node.push(pad(line))
 
-
-
-
+  return node
+}
 
 
 // helpers
@@ -233,4 +271,11 @@ function some(a, p, q, z) {
 }
 
 
-module.exports = {use, literal, member, molecule, group, call, func, anon, list, params, binary, unary, expr}
+//module.exports = function(code) {
+//  return block(empty, use(code))
+//}
+
+
+module.exports = {use, need, skip, expr, line, each, _while}
+
+//module.exports = {use, block, need, skip, literal, member, primary, group, call, func, anon, list, params, binary, unary, expr}
