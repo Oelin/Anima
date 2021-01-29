@@ -10,4 +10,4 @@ def count(to)
 end
 ```
 
-Note: this project is still in development
+Note: its not usable yet (^\_^;)
