@@ -102,7 +102,7 @@ function anon() {
   return {
     type: 'anon',
     params: params(),
-    body: skip(arrow) ? expr() : block()
+    body: skip(pad, arrow) ? expr() : block()
   }
 }
 
@@ -164,7 +164,7 @@ function primary() {
 function expr(min = 0) {
   let left = pad(primary)
 
- while (true) {
+  while (true) {
     let op = peek(operator)
     let bind = infix[op]
 
@@ -213,7 +213,7 @@ function command() {
 function _while() {
   return {
     type: need(/^while/),
-    test: expr(),
+    test: pad(expr),
     body: block()
   }
 }
