@@ -35,7 +35,7 @@ function arrow() {
 
 
 function operator() {
-  return need(/^((and|or|not)(\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
+  return need(/^((and|or|not)(?:\W|$)|==|!=|<<|>>|<<=|>>=|<=|>=|<|>|\+=|\-=|\*\*=|\*=|\/=|&=|\|=|\^=|=|\+|\-|\*\*|\*|\/|&|\||\^|~|\.|\[|\()/)
 }
 
 
@@ -85,7 +85,7 @@ function string() {
 function number() {
   return {
     type: 'number',
-    value: need(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)/)
+    value: need(/^(0x[0-9a-fA-F]+|0b[01]+|\d+\.\d+|\d+)(?:\W|$)/)
   }
 }
 
@@ -213,7 +213,7 @@ function command() {
 function _while() {
   return {
     type: need(/^while/),
-    cond: expr(),
+    test: expr(),
     body: block()
   }
 }
@@ -232,19 +232,18 @@ function each() {
 function _if() {
   return {
     type: need(/^if/),
-    cond: expr(),
-    body: block()
-    //...alt(),
+    test: expr(),
+    body: block(),
   }
 }
 
 
 function action() {
-  return skip(expr) || skip(_while) || skip(each) || command()
+  return skip(expr) || skip(_while) || skip(each) || skip(_if) || command()
 }
 
 
-function block(d=end) {
+function block(d = end) {
   let node = []
 
   while (!skip(d))
@@ -286,4 +285,4 @@ function some(start, p, sep, end) {
 }
 
 
-module.exports = parse
+module.exports = {use, parse, number, space, skip, operator, unary, primary, binary, expr}
