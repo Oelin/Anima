@@ -13,7 +13,7 @@ function need(token) {
 }
 
 
-// predict
+// lookahead
 
 function peek(...a) {
   let s = code
