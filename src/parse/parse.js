@@ -49,8 +49,8 @@ function space() {
 }
 
 
-function empty() {
-  return need(/^$/)
+function nothing() {
+  return !code.length
 }
 
 
@@ -115,7 +115,7 @@ function func() {
     type: 'func',
     name: name(),
     params: params(),
-    body: code()
+    body: block()
   }
 }
 
@@ -164,7 +164,7 @@ function primary() {
 function expr(min = 0) {
   let left = pad(primary)
 
-  while (true) {
+ while (true) {
     let op = peek(operator)
     let bind = infix[op]
 
@@ -190,7 +190,7 @@ function unary() {
 
 function binary(bind, left) {
   let op = operator()
-  let right = expr(bind + flip[op])
+  let right = expr(bind + !flip[op])
 
   return {
     type: 'binary',
@@ -201,9 +201,9 @@ function binary(bind, left) {
 }
 
 
-// statements
+// blocks
 
-function action() {
+function command() {
   return {
     type: skip(/^break/) || need(/^continue/)
   }
@@ -229,18 +229,28 @@ function each() {
 }
 
 
-function line() {
-  return skip(expr) || skip(_while) || skip(each) || action()
+function action() {
+  return skip(expr) || skip(_while) || skip(each) || command()
 }
 
 
-function block(e=end) {
+function block(d=end) {
   let node = []
 
-  while (! skip(e))
-    node.push(pad(line))
+  while (!skip(d))
+    node.push(pad(action))
 
   return node
+}
+
+
+function _if() {
+
+}
+
+
+function parse(code) {
+  return block(nothing, use(code))
 }
 
 
@@ -260,22 +270,15 @@ function pad(parser) {
 }
 
 
-function some(a, p, q, z) {
+function some(start, p, sep, end) {
   let node = []
-  a()
+  start()
 
-  while (!skip(z))
-    skip(q, node.push(p()))
+  while (!skip(end))
+    skip(sep, node.push(p()))
 
   return node
 }
 
 
-//module.exports = function(code) {
-//  return block(empty, use(code))
-//}
-
-
-module.exports = {use, need, skip, expr, line, each, _while}
-
-//module.exports = {use, block, need, skip, literal, member, primary, group, call, func, anon, list, params, binary, unary, expr}
+module.exports = parse
