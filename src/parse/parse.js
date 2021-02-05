@@ -229,6 +229,16 @@ function each() {
 }
 
 
+function _if() {
+  return {
+    type: need(/^if/),
+    cond: expr(),
+    body: block()
+    //...alt(),
+  }
+}
+
+
 function action() {
   return skip(expr) || skip(_while) || skip(each) || command()
 }
@@ -241,11 +251,6 @@ function block(d=end) {
     node.push(pad(action))
 
   return node
-}
-
-
-function _if() {
-
 }
 
 
