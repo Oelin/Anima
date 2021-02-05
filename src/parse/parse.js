@@ -285,4 +285,4 @@ function some(start, p, sep, end) {
 }
 
 
-module.exports = {use, parse, number, space, skip, operator, unary, primary, binary, expr}
+module.exports = parse
