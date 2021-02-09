@@ -143,7 +143,9 @@ function brhs(bind, op) {
 
 
 function after(bind, left) {
-  return skip(member, left) || skip(call, left) || binary(bind, left)
+  return skip(member, left) 
+    || skip(call, left) 
+    || binary(bind, left)
 }
 
 
@@ -194,13 +196,23 @@ function chunk() {
 
 
 function action() {
-  return skip(expr) || skip(chunk) || skip($return) || order()
+  return skip(expr) 
+    || skip(chunk) 
+    || skip($return)
+    || order()
+}
+
+
+function pad(p) {
+  let node = p(skip(space))
+  skip(space)
+
+  return node
 }
 
 
 // more expressions
 
-/*
 function group() {
   let right = expr(obr())
   cbr()
@@ -215,6 +227,19 @@ function unary() {
     type: 'unary',
     right: urhs(op),
     op
+  }
+}
+
+
+function expr(min = 0) {
+  let left = pad(primary)
+
+  while (true) {
+    let op = peek(operator)
+    let bind = infix[op]
+    
+    if (!op || bind < min) return left
+    left = after(left)
   }
 }
 
@@ -240,19 +265,6 @@ function member(left) {
 }
 
 
-function expr(min = 0) {
-  let left = pad(primary)
-
-  while (true) {
-    let op = peek(operator)
-    let bind = infix[op]
-    
-    if (!op || bind < min) return left
-    left = after(left)
-  }
-}
-
-
 // function binary(bind, left) {
 //   let op = operator()
 //   let right = brhs(bind, op)
@@ -264,7 +276,6 @@ function expr(min = 0) {
 //     op
 //   }
 // }
-*/
 
 
 // blocks
@@ -272,16 +283,9 @@ function expr(min = 0) {
 function block(d = end) {
   let node = []
   
-  while (!skip(d)) node.push(pad(action))
-  return node
-}
-
-
-function pad(parser) {
-  skip(space)
-  let node = parser()
-  skip(space)
-
+  while (!skip(d))
+    node.push(pad(action))
+  
   return node
 }
 
