@@ -35,6 +35,17 @@ function skip(p, ...a) {
 }
 
 
+// several
+
+function some(a, p, b, c) {
+  let node = []
+  a()
+  
+  while (!skip(c)) skip(b, node.push(p()))
+  return node
+}
+
+
 // move cursor
 
 function move(m) {
