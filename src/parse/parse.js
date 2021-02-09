@@ -161,7 +161,7 @@ function order() {
 }
 
 
-function _return() {
+function $return() {
   return {
     type: need(/^return/),
     right: expr()
@@ -169,7 +169,7 @@ function _return() {
 }
 
 
-function _while() {
+function $while() {
   return {
     type: need(/^while/),
     test: pad(expr)
@@ -177,7 +177,7 @@ function _while() {
 }
 
 
-function _if() {
+function $if() {
   return {
     type: need(/^if/),
     test: pad(expr)
@@ -187,14 +187,14 @@ function _if() {
 
 function chunk() {
   return {
-    ...skip(_while) || _if(),
+    ...skip($while) || $if(),
     body: block()
   }
 }
 
 
 function action() {
-  return skip(expr) || skip(chunk) || order()
+  return skip(expr) || skip(chunk) || skip($return) || order()
 }
 
 
