@@ -121,7 +121,12 @@ function func() {
 
 
 function literal() {
-  return skip(name) || skip(number) || skip(string) || skip(list) || skip(func) || anon()
+  return skip(name)
+    || skip(number) 
+    || skip(string) 
+    || skip(list) 
+    || skip(func)
+    || anon()
 }
 
 
