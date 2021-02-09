@@ -1,4 +1,4 @@
-let { use, need, peek, skip, fail } = require('./lex')
+let { use, need, peek, skip, some, fail } = require('./lex')
 let { infix, prefix, flip } = require('./operator')
 
 
@@ -279,13 +279,6 @@ function block(d = end) {
 }
 
 
-function parse(code) {
-  return block(nothing, use(code))
-}
-
-
-// helpers
-
 function pad(parser) {
   skip(space)
   let node = parser()
@@ -295,14 +288,8 @@ function pad(parser) {
 }
 
 
-function some(start, p, sep, end) {
-  let node = []
-  start()
-
-  while (!skip(end))
-    skip(sep, node.push(p()))
-
-  return node
+function parse(code) {
+  return block(nothing, use(code))
 }
 
 
