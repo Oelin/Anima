@@ -244,7 +244,11 @@ function _if() {
 
 
 function action() {
-  return skip(expr) || skip(_while) || skip(each) || skip(_if) || command()
+  return skip(expr)
+    || skip(_while) 
+    || skip(each) 
+    || skip(_if)
+    || command()
 }
 
 
