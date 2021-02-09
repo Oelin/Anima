@@ -130,7 +130,7 @@ function literal() {
 }
 
 
-// expressions
+// basic expressions
 
 function urhs(op) {
   return expr(prefix[op] || fail())
@@ -152,6 +152,55 @@ function primary() {
 }
 
 
+// statements
+
+function order() {
+  return {
+    type: skip(/^break/) || need(/^continue/)
+  }
+}
+
+
+function _return() {
+  return {
+    type: need(/^return/),
+    right: expr()
+  }
+}
+
+
+function _while() {
+  return {
+    type: need(/^while/),
+    test: pad(expr)
+  }
+}
+
+
+function _if() {
+  return {
+    type: need(/^if/),
+    test: pad(expr)
+  }
+}
+
+
+function chunk() {
+  return {
+    ...skip(_while) || _if(),
+    body: block()
+  }
+}
+
+
+function action() {
+  return skip(expr) || skip(chunk) || order()
+}
+
+
+// more expressions
+
+/*
 function group() {
   let right = expr(obr())
   cbr()
@@ -215,53 +264,10 @@ function expr(min = 0) {
 //     op
 //   }
 // }
+*/
 
 
-// blocks and statements
-
-function order() {
-  return {
-    type: skip(/^break/) || need(/^continue/)
-  }
-}
-
-
-function _return() {
-  return {
-    type: need(/^return/),
-    right: expr()
-  }
-}
-
-
-function _while() {
-  return {
-    type: need(/^while/),
-    test: pad(expr)
-  }
-}
-
-
-function _if() {
-  return {
-    type: need(/^if/),
-    test: pad(expr)
-  }
-}
-
-
-function chunk() {
-  return {
-    ...skip(_while) || _if(),
-    body: block()
-  }
-}
-
-
-function action() {
-  return skip(expr) || skip(chunk) || order()
-}
-
+// blocks
 
 function block(d = end) {
   let node = []
