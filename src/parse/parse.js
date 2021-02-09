@@ -176,19 +176,20 @@ function expr(min = 0) {
     if (!op || bind < min)
       return left
 
-    left = skip(member, left) || skip(call, left) || binary(bind, left)
+    left = skip(member, left) 
+      || skip(call, left) 
+      || binary(bind, left)
   }
 }
 
 
 function unary() {
   let op = operator()
-  let right = expr(prefix[op] || fail())
-
+  
   return {
     type: 'unary',
-    op,
-    right
+    right: expr(prefix[op] || fail()),
+    op
   }
 }
 
@@ -199,9 +200,9 @@ function binary(bind, left) {
 
   return {
     type: 'binary',
-    op,
     left,
-    right
+    right,
+    op
   }
 }
 
@@ -215,6 +216,14 @@ function command() {
 }
 
 
+function _return() {
+  return {
+    type: need(/^return/),
+    right: expr()
+  }
+}
+
+
 function _while() {
   return {
     type: need(/^while/),
@@ -224,14 +233,14 @@ function _while() {
 }
 
 
-function each() {
-  return {
-    type: need(/^for/),
-    left: pad(params),
-    right: expr(need(/^in/)),
-    body: block()
-  }
-}
+// function each() {
+//   return {
+//     type: need(/^for/),
+//     left: pad(params),
+//     right: expr(need(/^in/)),
+//     body: block()
+//   }
+// }
 
 
 function _if() {
@@ -245,9 +254,9 @@ function _if() {
 
 function action() {
   return skip(expr)
-    || skip(_while) 
+    || skip(While) 
     || skip(each) 
-    || skip(_if)
+    || skip(If)
     || command()
 }
 
