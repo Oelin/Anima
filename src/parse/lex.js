@@ -3,17 +3,17 @@ function use(s) {
 }
 
 
-// consume
+// consume token
 
 function need(token) {
   if (m = code.match(token))
     return move(m)
 
-  throw ''
+  fail()
 }
 
 
-// lookahead
+// peek next token  
 
 function peek(...a) {
   let s = code
@@ -35,7 +35,7 @@ function skip(p, ...a) {
 }
 
 
-// advance
+// move cursor
 
 function move(m) {
   let v = m.filter(e => e).pop()
@@ -45,9 +45,15 @@ function move(m) {
 }
 
 
+function fail() {
+  throw 'syntax error'
+}
+
+
 module.exports = {
   use,
   need,
   peek,
-  skip
+  skip,
+  fail
 }
