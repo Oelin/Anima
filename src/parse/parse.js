@@ -271,10 +271,8 @@ function expr(min = 0) {
 
 function block(d = end) {
   let node = []
-
-  while (!skip(d))
-    node.push(pad(action))
-
+  
+  while (!skip(d)) node.push(pad(action))
   return node
 }
 
