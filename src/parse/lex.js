@@ -66,5 +66,6 @@ module.exports = {
   need,
   peek,
   skip,
+  some,
   fail
 }
