@@ -173,7 +173,7 @@ function unary() {
 function call(left) {
   return {
     type: 'call',
-    args: some(obr, expr, comma, cbr),
+    given: some(obr, expr, comma, cbr),
     left
   }
 }
