@@ -1,8 +1,8 @@
-let { use, need, peek, skip } = require('./lex')
+let { use, need, peek, skip, fail } = require('./lex')
 let { infix, prefix, flip } = require('./operator')
 
 
-// tokens
+// terminals
 
 function osq() {
   return need(/^\[/)
@@ -132,14 +132,40 @@ function literal() {
 
 // expressions
 
-function member(left) {
-  let prop = expr(osq())
-  csq()
+function urhs(op) {
+  return expr(prefix[op] || fail())
+}
 
+
+function brhs(bind, op) {
+  return expr(bind + !flip[op])
+}
+
+
+function after(bind, left) {
+  return skip(member, left) || skip(call, left) || binary(bind, left)
+}
+
+
+function primary() {
+  return skip(literal) || skip(group) || unary()
+}
+
+
+function group() {
+  let right = expr(obr())
+  cbr()
+  return right
+}
+
+
+function unary() {
+  let op = operator()
+  
   return {
-    type: 'member',
-    prop,
-    left
+    type: 'unary',
+    right: urhs(op),
+    op
   }
 }
 
@@ -153,16 +179,15 @@ function call(left) {
 }
 
 
-function group() {
-  let right = expr(obr())
-  cbr()
+function member(left) {
+  let right = expr(osq())
+  csq()
 
-  return right
-}
-
-
-function primary() {
-  return skip(literal) || skip(group) || unary()
+  return {
+    type: 'member',
+    right,
+    left
+  }
 }
 
 
@@ -172,44 +197,29 @@ function expr(min = 0) {
   while (true) {
     let op = peek(operator)
     let bind = infix[op]
-
-    if (!op || bind < min)
-      return left
-
-    left = skip(member, left) 
-      || skip(call, left) 
-      || binary(bind, left)
+    
+    if (!op || bind < min) return left
+    left = after(left)
   }
 }
 
 
-function unary() {
-  let op = operator()
-  
-  return {
-    type: 'unary',
-    right: expr(prefix[op] || fail()),
-    op
-  }
-}
+// function binary(bind, left) {
+//   let op = operator()
+//   let right = brhs(bind, op)
+
+//   return {
+//     type: 'binary'
+//     left,
+//     right,
+//     op
+//   }
+// }
 
 
-function binary(bind, left) {
-  let op = operator()
-  let right = expr(bind + !flip[op])
+// blocks and statements
 
-  return {
-    type: 'binary',
-    left,
-    right,
-    op
-  }
-}
-
-
-// blocks
-
-function command() {
+function order() {
   return {
     type: skip(/^break/) || need(/^continue/)
   }
@@ -227,37 +237,29 @@ function _return() {
 function _while() {
   return {
     type: need(/^while/),
-    test: pad(expr),
-    body: block()
+    test: pad(expr)
   }
 }
-
-
-// function each() {
-//   return {
-//     type: need(/^for/),
-//     left: pad(params),
-//     right: expr(need(/^in/)),
-//     body: block()
-//   }
-// }
 
 
 function _if() {
   return {
     type: need(/^if/),
-    test: expr(),
-    body: block(),
+    test: pad(expr)
+  }
+}
+
+
+function chunk() {
+  return {
+    ...skip(_while) || _if(),
+    body: block()
   }
 }
 
 
 function action() {
-  return skip(expr)
-    || skip(While) 
-    || skip(each) 
-    || skip(If)
-    || command()
+  return skip(expr) || skip(chunk) || order()
 }
 
 
@@ -277,11 +279,6 @@ function parse(code) {
 
 
 // helpers
-
-function fail() {
-  throw 'syntax error'
-}
-
 
 function pad(parser) {
   skip(space)
