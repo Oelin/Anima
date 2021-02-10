@@ -3,6 +3,11 @@ function use(s) {
 }
 
 
+function fail() {
+  throw 'syntax error'
+}
+
+
 // consume token
 
 function need(token) {
@@ -41,7 +46,9 @@ function some(a, p, b, c) {
   let node = []
   a()
   
-  while (!skip(c)) skip(b, node.push(p()))
+  while (!skip(c))
+    skip(b, node.push(p()))
+  
   return node
 }
 
@@ -53,11 +60,6 @@ function move(m) {
   code = code.slice(v.length)
 
   return v
-}
-
-
-function fail() {
-  throw 'syntax error'
 }
 
 
