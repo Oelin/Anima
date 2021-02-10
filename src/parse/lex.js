@@ -3,23 +3,6 @@ function use(s) {
 }
 
 
-function fail() {
-  throw 'syntax error'
-}
-
-
-// consume token
-
-function need(token) {
-  if (m = code.match(token))
-    return move(m)
-
-  fail()
-}
-
-
-// peek next token  
-
 function peek(...a) {
   let s = code
   let node = skip(...a)
@@ -40,7 +23,21 @@ function skip(p, ...a) {
 }
 
 
-// several
+function need(token) {
+  if (m = code.match(token))
+    return move(m)
+
+  fail()
+}
+
+
+function move(m) {
+  let v = m.filter(e => e).pop()
+  code = code.slice(v.length)
+
+  return v
+}
+
 
 function some(a, p, b, c) {
   let node = []
@@ -50,16 +47,6 @@ function some(a, p, b, c) {
     skip(b, node.push(p()))
   
   return node
-}
-
-
-// move cursor
-
-function move(m) {
-  let v = m.filter(e => e).pop()
-  code = code.slice(v.length)
-
-  return v
 }
 
 
