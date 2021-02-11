@@ -4,42 +4,34 @@ A little scripting language that's easy to to read, write and learn. This is my 
 at writing a language. The frontend is nearly finished.
 
 
-### Assignment
-
 ```ruby
+
+# Assignment
+
 number = 43
 fun = true
 sad = false
-```
 
+# Conditions
 
-### Conditions
-
-```ruby
 name = "mas" if reverse else "sam"
 adult = true if age >= 18
 
 if adult
   print("#{name} is an adult")
 end
-```
 
-### Functions
+# Functions
 
-```ruby
 add = (x, y) -> x + y
-negative = (x) -> -x
 five = add(3, 2)
 
 def hello(name)
   print("hello my name is #{name}")
 end
-```
 
+# Loops
 
-### Loops
-
-```ruby
 while i < 10
   print(i)
 end
@@ -49,21 +41,15 @@ end
 for i in range(10)
   print(i)
 end
-```
 
+# Lists
 
-### Lists
-
-```
 powers = [2, 4, 8, 16, 32]
 
 print(powers[0])
-```
 
+# Objects 
 
-### Objects 
-
-```ruby
 math = {
   root: (x) -> x ** 0.5,
   square: (x) -> x ** 2,
