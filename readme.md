@@ -10,4 +10,4 @@ def count(to)
 end
 ```
 
-Note: its not usable yet (^\_^;)
+It's not finished yet (^\_^;)
