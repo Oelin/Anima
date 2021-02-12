@@ -11,11 +11,12 @@ def count(n)
 end
 ```
 
-### features (current and future)
+### Current and future features
 
-* weak typing
-* closures
-* lambdas and IIFEs
+* Weak typing
+* Closures
+* Lambdas and IIFEs
 * Pythonic ternary operator: `<expr> if <expr> else <expr>`
 * Pythonic for loops: `for <variable> in <iterator>`
-* YAML style objects
+* Pythonic dictionaries
+* JavaScript style `this`
