@@ -18,5 +18,5 @@ end
 * Lambdas and IIFEs
 * Pythonic ternary operator: `<expr> if <expr> else <expr>`
 * Pythonic for loops: `for <variable> in <iterator>`
-* Pythonic dictionaries
+* JavaScript object literals
 * Short-circuit evaluation
