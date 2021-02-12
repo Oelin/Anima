@@ -11,7 +11,7 @@ def count(n)
 end
 ```
 
-### Current and future features
+### Features
 
 * Weak typing
 * Closures
