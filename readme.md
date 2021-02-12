@@ -19,4 +19,4 @@ end
 * Pythonic ternary operator: `<expr> if <expr> else <expr>`
 * Pythonic for loops: `for <variable> in <iterator>`
 * JavaScript object literals
-* Short-circuit evaluation
+* Minimal evaluation
