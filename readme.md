@@ -20,3 +20,4 @@ end
 * Pythonic for loops: `for <variable> in <iterator>`
 * Pythonic dictionaries
 * JavaScript style `this`
+* short-circuit evaluation
