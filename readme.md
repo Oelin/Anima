@@ -17,6 +17,6 @@ end
 * Closures
 * Lambdas and IIFEs
 * Dictionaries
-* Pythonic ternary operator: `<expr> if <expr> else <expr>`
+* Pythonic ternary operator: `<action> if <condition> else <alternate>`
 * Pythonic for loops: `for <variable> in <iterator>`
 * Minimal evaluation
