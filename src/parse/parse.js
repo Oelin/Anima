@@ -2,7 +2,7 @@ let { use, need, peek, skip, some, fail } = require('./lex')
 let { infix, prefix, flip } = require('./operator')
 
 
-// terminals
+// tokens
 
 function osq() {
   return need(/^\[/)
@@ -39,8 +39,14 @@ function operator() {
 }
 
 
+function word() {
+  return need(/^(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)/)
+}
+
+
+//return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
 function ident() {
-  return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
+  return !peek(word) && need(/^[a-zA-Z_][\w_]*/)
 }
 
 
@@ -122,7 +128,7 @@ function func() {
 
 function literal() {
   return skip(name)
-    || skip(number) 
+    || skip(number)
     || skip(string) 
     || skip(list) 
     || skip(func)
@@ -130,7 +136,56 @@ function literal() {
 }
 
 
-// basic expressions
+// statements
+
+function action() {
+  return {
+    type: skip(/^break/) || need(/^continue/)
+  }
+}
+
+
+function _while() {
+  return {
+    type: need(/^while/),
+    test: pad(expr)
+  }
+}
+
+
+function _if() {
+  return {
+    type: need(/^if/),
+    test: pad(expr)
+  }
+}
+
+
+function chunk() {
+  return {
+    ...skip(_while) || _if(),
+    body: block()
+  }
+}
+
+
+function _return() {
+  return {
+    type: need(/^return/),
+    right: expr()
+  }
+}
+
+
+function line() {
+  return skip(expr) 
+    || skip(chunk) 
+    || skip(_return)
+    || order()
+}
+
+
+// expressions
 
 function urhs(op) {
   return expr(prefix[op] || fail())
@@ -154,55 +209,6 @@ function primary() {
 }
 
 
-// statements
-
-function order() {
-  return {
-    type: skip(/^break/) || need(/^continue/)
-  }
-}
-
-
-function $return() {
-  return {
-    type: need(/^return/),
-    right: expr()
-  }
-}
-
-
-function $while() {
-  return {
-    type: need(/^while/),
-    test: pad(expr)
-  }
-}
-
-
-function $if() {
-  return {
-    type: need(/^if/),
-    test: pad(expr)
-  }
-}
-
-
-function chunk() {
-  return {
-    ...skip($while) || $if(),
-    body: block()
-  }
-}
-
-
-function action() {
-  return skip(expr) 
-    || skip(chunk) 
-    || skip($return)
-    || order()
-}
-
-
 function pad(p) {
   let node = p(skip(space))
   skip(space)
@@ -210,8 +216,6 @@ function pad(p) {
   return node
 }
 
-
-// more expressions
 
 function group() {
   let right = expr(obr())
