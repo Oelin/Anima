@@ -44,7 +44,6 @@ function word() {
 }
 
 
-//return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
 function ident() {
   return !peek(word) && need(/^[a-zA-Z_][\w_]*/)
 }
@@ -198,29 +197,12 @@ function brhs(bind, op) {
 
 
 function after(bind, left) {
-  return skip(member, left) 
-    || skip(call, left) 
-    || binary(bind, left)
+  return skip(member, left) || skip(call, left) || binary(bind, left)
 }
 
 
-function primary() {
+function molecule() {
   return skip(literal) || skip(group) || unary()
-}
-
-
-function pad(p) {
-  let node = p(skip(space))
-  skip(space)
-
-  return node
-}
-
-
-function group() {
-  let right = expr(obr())
-  cbr()
-  return right
 }
 
 
@@ -234,24 +216,17 @@ function unary() {
   }
 }
 
-
-function expr(min = 0) {
-  let left = pad(primary)
-
-  while (true) {
-    let op = peek(operator)
-    let bind = infix[op]
-    
-    if (!op || bind < min) return left
-    left = after(left)
-  }
+function group() {
+  let right = expr(obr())
+  cbr()
+  return right
 }
 
 
 function call(left) {
   return {
     type: 'call',
-    given: some(obr, expr, comma, cbr),
+    args: some(obr, expr, comma, cbr),
     left
   }
 }
@@ -269,6 +244,19 @@ function member(left) {
 }
 
 
+function expr(min = 0) {
+  let left = pad(molecule)
+
+  while (true) {
+    let op = peek(operator)
+    let bind = infix[op]
+    
+    if (!op || bind < min) return left
+    left = after(left)
+  }
+}
+
+
 // function binary(bind, left) {
 //   let op = operator()
 //   let right = brhs(bind, op)
@@ -280,6 +268,13 @@ function member(left) {
 //     op
 //   }
 // }
+
+function pad(p) {
+  let node = p(skip(space))
+  skip(space)
+
+  return node
+}
 
 
 // blocks
@@ -300,3 +295,4 @@ function parse(code) {
 
 
 module.exports = parse
+//return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
