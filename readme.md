@@ -16,6 +16,6 @@ end
 * Weak typing
 * Closures
 * Lambdas
-* IIFEs
+* Functions as literals
 * Pythonic for loops: `for <variable> in <iterator>`
 * Minimal evaluation
