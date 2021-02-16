@@ -201,7 +201,7 @@ function after(bind, left) {
 }
 
 
-function molecule() {
+function primary() {
   return skip(literal) || skip(group) || unary()
 }
 
@@ -216,9 +216,11 @@ function unary() {
   }
 }
 
+
 function group() {
   let right = expr(obr())
   cbr()
+  
   return right
 }
 
@@ -245,7 +247,7 @@ function member(left) {
 
 
 function expr(min = 0) {
-  let left = pad(molecule)
+  let left = pad(primary)
 
   while (true) {
     let op = peek(operator)
@@ -283,7 +285,7 @@ function block(d = end) {
   let node = []
   
   while (!skip(d))
-    node.push(pad(action))
+    node.push(pad(line))
   
   return node
 }
