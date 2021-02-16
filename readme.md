@@ -15,8 +15,7 @@ end
 
 * Weak typing
 * Closures
-* Lambdas and IIFEs
-* Dictionaries
-* Pythonic ternary operator: `<action> if <condition> else <alternate>`
+* Lambdas
+* IIFEs
 * Pythonic for loops: `for <variable> in <iterator>`
 * Minimal evaluation
