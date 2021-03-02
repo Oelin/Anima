@@ -18,4 +18,4 @@ end
 * Lambdas
 * Pythonic for loops: `for <variable> in <iterator>`
 * Regular expressions
-* Optimised lexing
+* Quick lexing
