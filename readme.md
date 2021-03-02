@@ -1,7 +1,7 @@
 # Anima
 
-A little scripting language that's easy to to read, write and learn. The frontend is nearly finished.
-
+A little scripting language that's easy to to read, write and learn. Made mostly for fun and learning. Still a
+work-in-progress.
 
 ```ruby
 def count(n)
@@ -11,9 +11,10 @@ def count(n)
 end
 ```
 
+
 ### Features
 
-* Closures
+* Clean syntax
 * Lambdas
 * Pythonic for loops: `for <variable> in <iterator>`
-* Minimal evaluation
+* Regular expressions
