@@ -13,7 +13,6 @@ end
 
 ### Features
 
-* Weak typing
 * Closures
 * Lambdas
 * Pythonic for loops: `for <variable> in <iterator>`
