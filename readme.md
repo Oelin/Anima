@@ -3,8 +3,8 @@
 A little scripting language that's easy to to read, write and learn. Made mostly for fun and learning. Still a
 work-in-progress.
 
-```ruby
-def count(n)
+```js
+function count(n)
   for i in range(n)
     print(i)
   end
