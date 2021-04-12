@@ -4,9 +4,9 @@ A little scripting language that's easy to to read, write and learn. Made mostly
 work-in-progress.
 
 ```js
-function count(n)
+def count(n)
   for i in range(n)
-    print(i)
+    say(i)
   end
 end
 ```
