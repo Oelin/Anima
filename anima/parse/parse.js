@@ -1,25 +1,23 @@
-let { use, need, peek, skip, some, fail } = require('./lex')
-let { infix, prefix, flip } = require('./operator')
+const { use, need, peek, skip } = require('aprils')
+const { infix, prefix, flip } = require('./precedence')
 
 
-// tokens
-
-function osq() {
+function lsquare() {
   return need(/^\[/)
 }
 
 
-function csq() {
+function rsquare() {
   return need(/^\]/)
 }
 
 
-function obr() {
+function lparen() {
   return need(/^\(/)
 }
 
 
-function cbr() {
+function rparen() {
   return need(/^\)/)
 }
 
@@ -39,13 +37,8 @@ function operator() {
 }
 
 
-function word() {
-  return need(/^(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)/)
-}
-
-
 function ident() {
-  return !peek(word) && need(/^[a-zA-Z_][\w_]*/)
+  return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)
 }
 
 
@@ -297,4 +290,3 @@ function parse(code) {
 
 
 module.exports = parse
-//return need(/^(?:(?!(if|elif|else|while|for|in|def|return|break|continue|end|and|or|not)(\W|$)))([a-zA-Z_][\w_]*)/)

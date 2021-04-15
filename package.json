@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Oelin/anima/issues"
   },
-  "homepage": "https://github.com/Oelin/anima#readme"
+  "homepage": "https://github.com/Oelin/anima#readme",
+  "dependencies": {
+    "aprils": "^1.0.1"
+  }
 }
